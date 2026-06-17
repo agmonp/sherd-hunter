@@ -1,0 +1,80 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Tel Arad",
+    "kind": "target",
+    "note": "EB II lower city; dense surface sherd scatter; IAA ground truth."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     35.1247,
+     31.2803
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "On-tell sample pixel",
+    "kind": "sample_hot",
+    "note": "EMIT pixel r30/c522, 31 m from target. Carbonate depth 0.0675."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     35.1247,
+     31.2803
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Background sample pixel",
+    "kind": "sample_cold",
+    "note": "Open desert ~3 km E. Carbonate depth 0.0457."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     35.1564,
+     31.2803
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Tel Beer-Sheva",
+    "kind": "site",
+    "note": "UNESCO Iron Age tell, ~28 km W. Good second validation target."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     34.8413,
+     31.2447
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Khirbet Qumran",
+    "kind": "site",
+    "note": "From legacy argis sites list."
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     35.458,
+     31.741
+    ]
+   }
+  }
+ ]
+}

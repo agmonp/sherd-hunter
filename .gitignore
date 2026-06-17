@@ -1,0 +1,19 @@
+# Internal AI working notes — not for publication
+CLAUDE.md
+
+# Large satellite data + intermediates (multi-GB; reproducible from granule IDs — see SOURCES.md)
+scenes/*
+!scenes/README.md
+
+# Build-artifact / intermediate videos (the merged showcase sherdhunter_full.mp4 IS tracked)
+sherdhunter_intro.mp4
+sherdhunter_walkthrough.mp4
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+Thumbs.db
+.DS_Store

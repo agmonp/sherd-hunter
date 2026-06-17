@@ -1,0 +1,31 @@
+{
+ "sensor": "EnMAP 30 m",
+ "n_sites": 78,
+ "mesma_site_auc": 0.7074,
+ "mesma_auc_ci95": [
+  0.6461,
+  0.7545
+ ],
+ "firing_auc": 0.7759,
+ "preregistered_win_threshold": 0.81,
+ "verdict": "loss",
+ "median_fired_abundance": 0.0,
+ "median_rmse": 0.01295,
+ "diagnostics": {
+  "Tel Arad": {
+   "fired_abundance": 0.248,
+   "anom_pct": 85.6
+  },
+  "Tel Malhata": {
+   "fired_abundance": 0.342,
+   "anom_pct": 93.0
+  }
+ },
+ "endmembers": [
+  "bg_soil(scene)",
+  "BrickMean_fired_clay",
+  "Calcite_WS272",
+  "Montmorillonite_SWy1"
+ ],
+ "run": "2026-06-17 13:03"
+}

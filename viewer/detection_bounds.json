@@ -1,0 +1,26 @@
+{
+ "granule": "enmap_DT0000069168_SPECTRAL",
+ "bbox": [
+  34.967452638261015,
+  31.122559860667767,
+  35.46706964529551,
+  31.469148242322813
+ ],
+ "method": "EnMAP-FIRING",
+ "has_halo": true,
+ "label": "EnMAP L2A 30 m \u2014 PRIMARY = firing screen (Al-OH depletion + brightness, the specific archaeological marker; site-AUC 0.7759 beats carbonate-halo 0.7484). Toggle 'Carbonate-halo screen' for the broad anthrosol/terrain channel. Locked directions, robust-z, ~5 km bg.",
+ "stats": {
+  "valid_px": 1187989,
+  "p999": 4.36944622320977,
+  "max": 9.50969911135475,
+  "screen_auc": {
+   "firing": 0.7759,
+   "halo": 0.7484
+  },
+  "tel_arad": {
+   "firing_pct": 88.3,
+   "halo_pct": 86.3
+  }
+ },
+ "run": "2026-06-17 06:55"
+}

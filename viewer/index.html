@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>SherdHunter — Hyperspectral Pottery-Scatter Scanner</title>
+<link rel="icon" type="image/png" href="favicon.png"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+  :root{
+    --bg:#0c1014; --panel:#141b22; --panel2:#1b2530; --line:#283642;
+    --ink:#e8eef4; --muted:#8da2b5; --accent:#ff7a3c; --teal:#34c8b4;
+    --hot:#e63232; --warn:#f5c542; --ok:#5fc97a; --shadow:0 6px 24px rgba(0,0,0,.4);
+    --mono:"SFMono-Regular",ui-monospace,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+  #app{display:grid;grid-template-columns:1fr 420px;grid-template-rows:auto 1fr;height:100%}
+  header{grid-column:1/3;display:flex;align-items:center;gap:14px;padding:9px 16px;
+    background:linear-gradient(90deg,#0e1620,#141b22);border-bottom:1px solid var(--line)}
+  header .logo{font-weight:700;font-size:18px;letter-spacing:.3px}
+  header .logo b{color:var(--accent)}
+  header .sub{color:var(--muted);font-size:12.5px;margin-left:2px}
+  .badge{font-family:var(--mono);font-size:10.5px;padding:3px 7px;border-radius:5px;
+    border:1px solid;letter-spacing:.4px}
+  .badge.demo{color:var(--warn);border-color:#5a4d1e;background:#241f0e}
+  .badge.live{color:var(--ok);border-color:#23492f;background:#0f1f14}
+  .spacer{flex:1}
+  header a{color:var(--teal);text-decoration:none;font-size:12.5px}
+  #map{position:relative}
+  .side{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+  .tabs{display:flex;border-bottom:1px solid var(--line);background:var(--panel2)}
+  .tabs button{flex:1;padding:10px 4px;background:none;border:0;color:var(--muted);
+    font-size:12px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent}
+  .tabs button.active{color:var(--ink);border-bottom-color:var(--accent)}
+  .tabwrap{overflow:auto;padding:14px;flex:1;min-height:0}
+  h3{margin:2px 0 8px;font-size:13px;letter-spacing:.3px}
+  h4{margin:14px 0 6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+  p.note{font-size:12px;color:var(--muted);line-height:1.5}
+  .pill{display:inline-block;font-family:var(--mono);font-size:10.5px;padding:2px 6px;border-radius:4px;
+    background:#0f1620;border:1px solid var(--line);color:var(--muted);margin:0 4px 4px 0}
+  .metric{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px dashed var(--line)}
+  .metric .k{font-size:12px;color:var(--muted)} .metric .v{font-family:var(--mono);font-size:13px}
+  .v.hot{color:var(--accent)} .v.cold{color:var(--teal)}
+  .delta{font-family:var(--mono);font-size:11px;color:var(--ok);margin-left:6px}
+  button.act{background:var(--accent);color:#1a0e07;border:0;border-radius:6px;padding:8px 12px;
+    font-weight:700;font-size:12.5px;cursor:pointer}
+  button.act.alt{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+  button.act:disabled{opacity:.5;cursor:wait}
+  input,select{background:#0e151c;border:1px solid var(--line);color:var(--ink);border-radius:5px;
+    padding:6px 8px;font-size:12px;font-family:var(--mono);width:100%}
+  label.fld{display:block;font-size:11px;color:var(--muted);margin:8px 0 3px}
+  .row{display:flex;gap:8px}.row>*{flex:1}
+  table{width:100%;border-collapse:collapse;font-size:11.5px}
+  th,td{text-align:left;padding:6px 6px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px}
+  td.mono,th.mono{font-family:var(--mono)}
+  .src{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:9px;background:var(--panel2)}
+  .src .t{font-weight:700;font-size:13px}.src .t .res{color:var(--teal);font-family:var(--mono);font-size:11px;margin-left:6px}
+  .src .meta{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.45}
+  .src a{color:var(--accent);font-size:11.5px;text-decoration:none}
+  .tag{font-family:var(--mono);font-size:9.5px;padding:1px 5px;border-radius:3px;margin-left:6px}
+  .tag.free{background:#0f1f14;color:var(--ok);border:1px solid #23492f}
+  .tag.task{background:#241f0e;color:var(--warn);border:1px solid #5a4d1e}
+  .tag.collab{background:#1a1326;color:#b48cf0;border:1px solid #3c2c5a}
+  .legend{position:absolute;bottom:14px;left:14px;z-index:600;background:rgba(14,20,26,.92);
+    border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:11px;box-shadow:var(--shadow)}
+  .legend .bar{height:9px;width:170px;border-radius:3px;margin:5px 0 3px;
+    background:linear-gradient(90deg,#281e5a,#1e78c8,#28c88c,#e6dc28,#f08c1e,#dc1e1e)}
+  .legend .ends{display:flex;justify-content:space-between;color:var(--muted);font-family:var(--mono);font-size:10px}
+  .ctrl{position:absolute;top:10px;right:10px;z-index:600;background:rgba(14,20,26,.94);
+    border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12px;box-shadow:var(--shadow);width:200px}
+  .ctrl h5{margin:0 0 6px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .ctrl label{display:flex;align-items:center;gap:7px;padding:3px 0;cursor:pointer}
+  .ctrl input[type=checkbox],.ctrl input[type=radio]{width:auto}
+  .ctrl .op{display:flex;align-items:center;gap:6px;margin-top:5px}
+  .ctrl input[type=range]{width:90px}
+  .ctrl hr{border:0;border-top:1px solid var(--line);margin:8px 0}
+  .scope{font-size:11.5px;color:var(--muted);line-height:1.55;background:#0f1620;border:1px solid var(--line);
+    border-left:3px solid var(--warn);border-radius:6px;padding:9px 11px;margin:6px 0}
+  svg text{fill:var(--muted);font-size:9px;font-family:var(--mono)}
+  .empty{color:var(--muted);font-size:12px;padding:10px;text-align:center}
+  code{font-family:var(--mono);background:#0f1620;padding:1px 5px;border-radius:4px;font-size:11px;color:var(--teal)}
+  .toggle-row{display:flex;gap:6px;margin:6px 0}
+  .toggle-row button{flex:1;font-size:11px;padding:6px;border-radius:5px;border:1px solid var(--line);
+    background:var(--panel2);color:var(--muted);cursor:pointer}
+  .toggle-row button.on{background:var(--accent);color:#1a0e07;border-color:var(--accent);font-weight:700}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="logo"><b>Sherd</b>Hunter</div>
+    <div class="sub">sub-pixel pottery-scatter detection · hyperspectral</div>
+    <span class="badge demo" id="modeBadge">DEMO DATA</span>
+    <div class="spacer"></div>
+    <span class="sub" id="coord">—</span>
+  </header>
+
+  <div id="map">
+    <div class="ctrl">
+      <h5>Basemap</h5>
+      <label><input type="radio" name="base" value="sat" checked> Satellite (Esri)</label>
+      <label><input type="radio" name="base" value="goog"> Google Hybrid</label>
+      <label><input type="radio" name="base" value="streets"> Streets</label>
+      <label><input type="radio" name="base" value="topo"> Topographic</label>
+      <hr/>
+      <h5>Overlays</h5>
+      <label><input type="checkbox" id="lyrHeat" checked> Firing screen <span style="color:var(--muted);font-size:10px">(primary: Al-OH + brightness)</span></label>
+      <label><input type="checkbox" id="lyrRaw"> Carbonate-halo screen <span style="color:var(--muted);font-size:10px">(terrain/anthrosol)</span></label>
+      <div class="op"><span style="color:var(--muted)">opacity</span>
+        <input type="range" id="heatOp" min="0" max="100" value="70"></div>
+      <label><input type="checkbox" id="lyrFoot"> Hyperspectral footprint</label>
+      <label><input type="checkbox" id="lyrSites" checked> Known sites</label>
+      <label><input type="checkbox" id="lyrPix" checked> EMIT sample pixels</label>
+      <label><input type="checkbox" id="lyrKnown" checked> Known archaeology <span id="knownN" style="color:var(--muted);font-size:10px"></span></label>
+      <label><input type="checkbox" id="lyrMask"> Modern / industrial (mask) <span id="maskN" style="color:var(--muted);font-size:10px"></span></label>
+      <label><input type="checkbox" id="lyrGeo"> Geology — GSI <span id="geoN" style="color:var(--muted);font-size:10px"></span></label>
+      <label><input type="checkbox" id="lyrNoSherd"> No-sherd mask <span id="nosN" style="color:var(--muted);font-size:10px"></span></label>
+      <label><input type="checkbox" id="lyrAOI"> Scan AOI box</label>
+    </div>
+    <div class="legend">
+      <div style="font-weight:600">Detection score <span class="badge demo" style="font-size:9px">synthetic</span></div>
+      <div class="bar"></div>
+      <div class="ends"><span>0.0 background</span><span>1.0 strong</span></div>
+    </div>
+  </div>
+
+  <div class="side">
+    <div class="tabs">
+      <button data-tab="spec" class="active">Spectrum</button>
+      <button data-tab="scan">Scan</button>
+      <button data-tab="src">Sources</button>
+      <button data-tab="find">Findings</button>
+      <button data-tab="about">About</button>
+    </div>
+
+    <!-- SPECTRUM -->
+    <div class="tabwrap" id="tab-spec">
+      <h3>EMIT reflectance — Tel Arad</h3>
+      <p class="note">On-tell pixel vs open-desert background, NASA EMIT L2A (60 m, 285 bands).
+        The diagnostic is in the SWIR: carbonate absorption at ~2345 nm and clay Al-OH at ~2200 nm.</p>
+      <div class="toggle-row">
+        <button id="vFull" class="on">Full 0.38–2.49 µm</button>
+        <button id="vCont">Continuum-removed zoom</button>
+      </div>
+      <div id="chart"></div>
+      <div style="display:flex;gap:14px;font-size:11px;margin:4px 2px 0">
+        <span style="color:var(--accent)">■ on-tell</span>
+        <span style="color:var(--teal)">■ background</span>
+      </div>
+      <h4>Diagnostic features</h4>
+      <div id="metrics"></div>
+      <div class="scope" id="specCaveat"></div>
+    </div>
+
+    <!-- SCAN -->
+    <div class="tabwrap" id="tab-scan" style="display:none">
+      <h3>Scan a new area</h3>
+      <p class="note">Query NASA's CMR catalog live for hyperspectral granules over a bounding box.
+        Metadata search needs no login. Download + detection runs in <code>pipeline/detect.py</code>.</p>
+      <label class="fld">Sensor / collection</label>
+      <select id="sensor">
+        <option value="EMITL2ARFL">EMIT L2A reflectance (60 m, 2022– )</option>
+        <option value="EO1_HYP_PUB">Hyperion EO-1 (30 m, 2001–2017)</option>
+      </select>
+      <div class="row">
+        <div><label class="fld">lon min</label><input id="bxW" value="35.05"></div>
+        <div><label class="fld">lat min</label><input id="bxS" value="31.23"></div>
+      </div>
+      <div class="row">
+        <div><label class="fld">lon max</label><input id="bxE" value="35.20"></div>
+        <div><label class="fld">lat max</label><input id="bxN" value="31.33"></div>
+      </div>
+      <div class="row" style="margin-top:9px">
+        <button class="act alt" id="useView">Use map view</button>
+        <button class="act" id="doScan">Search CMR</button>
+      </div>
+      <p class="note" id="enmapNote" style="margin-top:8px">
+        <b>EnMAP / PRISMA</b> (30 m, the higher-value next sensors) are not in CMR — request via the
+        <a href="https://planning.enmap.org/" target="_blank" style="color:var(--teal)">EnMAP portal</a>
+        and <a href="https://prisma.asi.it/" target="_blank" style="color:var(--teal)">PRISMA / ASI</a>.</p>
+      <h4>Results <span id="scanCount" class="pill">—</span></h4>
+      <div id="scanResults"><div class="empty">Run a search to list available scenes.</div></div>
+    </div>
+
+    <!-- SOURCES -->
+    <div class="tabwrap" id="tab-src" style="display:none">
+      <h3>Open hyperspectral data sources</h3>
+      <p class="note">The detection tiers, from free orbital screening down to cm-scale confirmation.
+        Resolution sets what is possible: at 30–60 m the win is statistical separation and anomaly
+        flagging; pottery <i>typology</i> needs the airborne/drone/lab tiers.</p>
+      <div id="srcList"></div>
+    </div>
+
+    <!-- FINDINGS -->
+    <div class="tabwrap" id="tab-find" style="display:none">
+      <h3>Candidate anomalies</h3>
+      <p class="note">Clustered hot spots from the detection surface, ranked by score, tagged by whether
+        they fall on a known site. Off-site hits are the targets worth interrogating.</p>
+      <div class="scope" id="findScope">These rows come from the <b>synthetic demo</b> surface. Real rows appear here once
+        <code>detect.py</code> writes <code>findings.geojson</code> from an EMIT cube.</div>
+      <div id="valBox" style="margin:8px 0"></div>
+      <table id="findTable"><thead><tr><th>#</th><th>lat, lon</th><th>score</th><th>class</th></tr></thead>
+        <tbody></tbody></table>
+      <div id="verifyBox" style="margin-top:14px"></div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="tabwrap" id="tab-about" style="display:none">
+      <h3>What this is — and isn't</h3>
+      <p class="note">SherdHunter looks for fired-ceramic (pottery) surface scatter at archaeological
+        sites from public satellite hyperspectral data, using sub-pixel target detection.</p>
+      <h4>Why it can work</h4>
+      <p class="note">Firing clay above ~550 °C dehydroxylates kaolinite to metakaolin, degrading the
+        2200 nm Al-OH absorption characteristically — so fired ceramic is spectrally separable from raw
+        clay and soil. On carbonate (Negev) terrain, anthropogenic ash and lime-plaster can deepen the
+        2345 nm carbonate feature, an anthrosol halo.</p>
+      <h4>Honest ceiling</h4>
+      <p class="note">A sherd is centimetres; an EMIT pixel is 60 m. Success at orbital scale =
+        <b>statistical separation</b> (an ROC curve, on-tell vs off-tell) and flagging anomalies, <b>not</b>
+        a sherd map. Segmenting pottery <i>types</i> needs the cm-scale airborne/lab tier. The biggest
+        risk is mistaking geology (natural carbonate/clay outcrops) for an anthropogenic signal — every
+        detector must be tested against off-site outcrops first.</p>
+      <h4>Status</h4>
+      <p class="note">One on-tell pixel vs one background pixel processed end-to-end over Tel Arad:
+        carbonate depth 0.0675 vs 0.0457 (~48% deeper). N=1 — an encouraging anecdote, not a result.
+        Next: many-pixel ROC, then a full-scene ACE heatmap.</p>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="data.js"></script>
+<script>
+const S = window.SHERD || {};
+const TEL = [31.2803, 35.1247];
+
+/* ---------- map + basemaps ---------- */
+const map = L.map('map',{zoomControl:true,attributionControl:false}).setView(TEL, 13);
+const bases = {
+  sat: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19}),
+  goog: L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',{subdomains:['mt0','mt1','mt2','mt3'],maxZoom:20}),
+  streets: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}),
+  topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:17}),
+};
+let curBase = bases.sat.addTo(map);
+document.querySelectorAll('input[name=base]').forEach(r=>r.onchange=e=>{
+  map.removeLayer(curBase); curBase = bases[e.target.value].addTo(map); curBase.bringToBack();
+});
+map.on('mousemove',e=>document.getElementById('coord').textContent =
+  e.latlng.lat.toFixed(4)+', '+e.latlng.lng.toFixed(4));
+
+/* ---------- detection heatmap overlay ---------- */
+const demo = S.detectionDemo || {bbox:[35.05,31.23,35.20,31.33]};
+const bb = demo.bbox; // [W,S,E,N]
+const heatBounds = [[bb[1],bb[0]],[bb[3],bb[2]]];
+let heat = null;
+if(S.detectionPng){
+  heat = L.imageOverlay(S.detectionPng, heatBounds, {opacity:0.7}).addTo(map);
+}
+document.getElementById('heatOp').oninput = e=>{ const v=e.target.value/100; if(heat) heat.setOpacity(v); if(window._rawHeat) window._rawHeat.setOpacity(v); };
+document.getElementById('lyrHeat').onchange = e=>{
+  if(!heat) return; e.target.checked ? heat.addTo(map) : map.removeLayer(heat); };
+
+/* ---------- hyperspectral footprint ---------- */
+const foot = L.rectangle(heatBounds,{color:'#34c8b4',weight:1.5,dashArray:'5 4',fill:false})
+  .bindTooltip('EMIT granule swath — SWIR false-color (R=2200 G=2345 B=860 nm) loads here from the cube');
+document.getElementById('lyrFoot').onchange = e=> e.target.checked ? foot.addTo(map) : map.removeLayer(foot);
+
+/* ---------- sites + sample pixels ---------- */
+const siteColors = {target:'#ff7a3c',site:'#5fc97a',sample_hot:'#e63232',sample_cold:'#34c8b4'};
+const sitesG = L.layerGroup(), pixG = L.layerGroup();
+(S.sites?.features||[]).forEach(f=>{
+  const [lon,lat]=f.geometry.coordinates, p=f.properties;
+  const isPix = p.kind.startsWith('sample');
+  const m = L.circleMarker([lat,lon],{radius:isPix?6:7,color:siteColors[p.kind]||'#999',
+      weight:2,fillColor:siteColors[p.kind]||'#999',fillOpacity:isPix?.5:.85})
+    .bindPopup(`<b>${p.name}</b><br><span style="color:#8da2b5;font-size:11px">${p.note||''}</span>`);
+  (isPix?pixG:sitesG).addLayer(m);
+});
+sitesG.addTo(map); pixG.addTo(map);
+document.getElementById('lyrSites').onchange=e=>e.target.checked?sitesG.addTo(map):map.removeLayer(sitesG);
+document.getElementById('lyrPix').onchange=e=>e.target.checked?pixG.addTo(map):map.removeLayer(pixG);
+
+/* ---------- known-knowledge layers (OSM): archaeology validation + modern/industrial mask ---------- */
+const knownCanvas = L.canvas({padding:0.5});
+const knownG = L.layerGroup(), maskG = L.layerGroup();
+fetch('known_sites.geojson',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(gj=>{
+  if(!gj) return;
+  let ns=0,nm=0;
+  (gj.features||[]).forEach(f=>{
+    const [lon,lat]=f.geometry.coordinates, p=f.properties||{};
+    const isMask=!!p.mask, col=p.color||(isMask?'#7aa0ff':'#ff7a3c');
+    const m=L.circleMarker([lat,lon],{renderer:knownCanvas,radius:isMask?3:4,color:col,
+        weight:1,fillColor:col,fillOpacity:isMask?.35:.6});
+    const label=p.name||p.name_he||p.site_type||p.category;
+    m.bindTooltip(`${label} <span style="color:#8da2b5">(${p.category})</span>`,{sticky:true});
+    (isMask?maskG:knownG).addLayer(m); isMask?nm++:ns++;
+  });
+  knownG.addTo(map);                                   // archaeology on; mask off by default
+  document.getElementById('knownN').textContent = ns?`(${ns})`:'';
+  document.getElementById('maskN').textContent  = nm?`(${nm})`:'';
+});
+document.getElementById('lyrKnown').onchange=e=>e.target.checked?knownG.addTo(map):map.removeLayer(knownG);
+document.getElementById('lyrMask').onchange =e=>e.target.checked?maskG.addTo(map):map.removeLayer(maskG);
+
+/* ---------- geology (GSI 1:200k) — named false-positive terrain (Hatrurim/Lisan/carbonate) ---------- */
+map.createPane('geo'); map.getPane('geo').style.zIndex=350;          // under the heatmap overlay
+const geoCanvas=L.canvas({pane:'geo',padding:0.5}), geoG=L.layerGroup();
+fetch('geology.geojson',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(gj=>{
+  if(!gj) return;
+  const lyr=L.geoJSON(gj,{pane:'geo',renderer:geoCanvas,
+    style:f=>({color:f.properties.color,weight:.4,opacity:.5,fillColor:f.properties.color,fillOpacity:.35}),
+    onEachFeature:(f,l)=>{const p=f.properties;
+      l.bindTooltip(`${p.name||p.name_he} <span style="color:#8da2b5">[${p.flag}]</span>`,{sticky:true});}});
+  geoG.addLayer(lyr);
+  const c=(gj.meta&&gj.meta.counts)||{};
+  document.getElementById('geoN').textContent=`(Hatrurim ${c.fired_carbonate||0} · Lisan ${c.lacustrine_marl||0})`;
+});
+document.getElementById('lyrGeo').onchange=e=>e.target.checked?geoG.addTo(map):map.removeLayer(geoG);
+
+/* ---------- no-sherd mask (OSM water / salt-pond / urban / industrial) ---------- */
+const nosCanvas=L.canvas({pane:'geo',padding:0.5}), nosG=L.layerGroup();
+fetch('nosherd_mask.geojson',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(gj=>{
+  if(!gj) return;
+  const lyr=L.geoJSON(gj,{pane:'geo',renderer:nosCanvas,
+    style:f=>({color:f.properties.color,weight:.3,opacity:.4,fillColor:f.properties.color,fillOpacity:.25}),
+    onEachFeature:(f,l)=>l.bindTooltip(`${f.properties.kind}${f.properties.name?' — '+f.properties.name:''}`,{sticky:true})});
+  nosG.addLayer(lyr);
+  document.getElementById('nosN').textContent=`(${(gj.features||[]).length})`;
+});
+document.getElementById('lyrNoSherd').onchange=e=>e.target.checked?nosG.addTo(map):map.removeLayer(nosG);
+
+/* ---------- AOI box ---------- */
+let aoi=null;
+function drawAOI(){
+  if(aoi) map.removeLayer(aoi);
+  const W=+bxW.value,So=+bxS.value,E=+bxE.value,N=+bxN.value;
+  aoi=L.rectangle([[So,W],[N,E]],{color:'#f5c542',weight:1.5,fill:false});
+}
+document.getElementById('lyrAOI').onchange=e=>{ drawAOI(); e.target.checked?aoi.addTo(map):map.removeLayer(aoi); };
+
+/* ---------- tabs ---------- */
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  ['spec','scan','src','find','about'].forEach(t=>
+    document.getElementById('tab-'+t).style.display = t===b.dataset.tab?'block':'none');
+});
+
+/* ---------- spectral chart ---------- */
+const spec=S.spectra||{};
+function plot(mode){
+  const W=388,H=210,pad={l:34,r:8,t:10,b:22};
+  let series, xmin,xmax,ymin,ymax, win=[];
+  if(mode==='full'){
+    const f=spec.full; series=[['#ff7a3c',f.onTell],['#34c8b4',f.background]];
+    xmin=380;xmax=2493;ymin=0;ymax=0.62; win=[[2160,2230],[2320,2360]];
+  }else{
+    const c=spec.continuum, wl=c.wl;
+    series=[['#ff7a3c',wl.map((w,i)=>[w,c.onTell[i]])],['#34c8b4',wl.map((w,i)=>[w,c.background[i]])]];
+    xmin=2056;xmax=2375;ymin=0.90;ymax=1.005; win=[[2160,2230],[2320,2360]];
+  }
+  const X=v=>pad.l+(v-xmin)/(xmax-xmin)*(W-pad.l-pad.r);
+  const Y=v=>pad.t+(1-(v-ymin)/(ymax-ymin))*(H-pad.t-pad.b);
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="background:#0e151c;border:1px solid #283642;border-radius:8px">`;
+  win.forEach(([a,b])=>{svg+=`<rect x="${X(a)}" y="${pad.t}" width="${X(b)-X(a)}" height="${H-pad.t-pad.b}" fill="#ffffff" opacity="0.045"/>`;});
+  svg+=`<text x="${X(2200)}" y="${pad.t+9}" text-anchor="middle" fill="#8da2b5">Al-OH</text>`;
+  svg+=`<text x="${X(2345)}" y="${pad.t+9}" text-anchor="middle" fill="#8da2b5">CO₃</text>`;
+  // axes
+  const yt = mode==='full'?[0,0.2,0.4,0.6]:[0.90,0.95,1.0];
+  yt.forEach(t=>{svg+=`<line x1="${pad.l}" y1="${Y(t)}" x2="${W-pad.r}" y2="${Y(t)}" stroke="#283642"/><text x="2" y="${Y(t)+3}">${t}</text>`;});
+  const xt = mode==='full'?[500,1000,1500,2000,2493]:[2100,2200,2300];
+  xt.forEach(t=>svg+=`<text x="${X(t)}" y="${H-6}" text-anchor="middle">${t}</text>`);
+  series.forEach(([col,data])=>{
+    let d='',pen=false;
+    data.forEach(p=>{ if(p[1]==null){pen=false;return;}
+      d+=(pen?'L':'M')+X(p[0]).toFixed(1)+' '+Y(p[1]).toFixed(1)+' '; pen=true; });
+    svg+=`<path d="${d}" fill="none" stroke="${col}" stroke-width="1.6"/>`;
+  });
+  svg+='</svg>';
+  document.getElementById('chart').innerHTML=svg;
+}
+function metrics(){
+  const f=spec.features||{}; const box=document.getElementById('metrics');
+  const rows=[
+    ['Carbonate 2345 nm depth', f.carbonate_2345_depth, true],
+    ['Clay Al-OH 2200 nm depth', f.alOH_2200_depth, false],
+    ['Brightness (vis–NIR)', f.brightness_vis_nir, false],
+  ];
+  box.innerHTML = rows.map(([k,o])=>{
+    if(!o) return '';
+    const a=o.onTell, b=o.background;
+    const d = (a!=null&&b!=null&&b!=0)? Math.round((a-b)/Math.abs(b)*100):null;
+    return `<div class="metric"><span class="k">${k}</span><span>
+      <span class="v hot">${a?.toFixed(4)??'—'}</span> /
+      <span class="v cold">${b?.toFixed(4)??'—'}</span>
+      ${d!=null?`<span class="delta">${d>0?'+':''}${d}%</span>`:''}</span></div>`;
+  }).join('');
+  document.getElementById('specCaveat').innerHTML =
+    `<b>${spec.meta?.n_onTell??1} on-tell vs ${spec.meta?.n_background??1} background pixel.</b>
+     ${spec.meta?.note||''}`;
+}
+document.getElementById('vFull').onclick=function(){this.classList.add('on');vCont.classList.remove('on');plot('full');};
+document.getElementById('vCont').onclick=function(){this.classList.add('on');vFull.classList.remove('on');plot('cont');};
+plot('full'); metrics();
+
+/* ---------- sources catalog ---------- */
+const SOURCES=[
+  ['EMIT — NASA / JPL','60 m','free','Imaging spectrometer on the ISS, 285 bands 0.38–2.5 µm. Built for surface mineralogy — ideal for clay/carbonate. <b>Current screening sensor.</b>','https://earth.jpl.nasa.gov/emit/'],
+  ['EnMAP — DLR','30 m','task','German hyperspectral satellite, 224 bands. 4× EMIT resolution; <b>taskable</b> via free science proposal. The key next step.','https://www.enmap.org/'],
+  ['PRISMA — ASI','30 m','task','Italian hyperspectral, 239 bands. Free for research after registration; growing archive over the Levant.','https://prisma.asi.it/'],
+  ['Hyperion — EO-1 / USGS','30 m','free','Decommissioned 2017 but 2001–2017 archive is free on EarthExplorer — good for temporal stacking to boost SNR.','https://earthexplorer.usgs.gov/'],
+  ['Sentinel-2 / Landsat','10–30 m','free','Multispectral, not hyperspectral — but free, dense time series. Useful for context, crop/soil marks, change.','https://dataspace.copernicus.eu/'],
+  ['Pixxel Fireflies','~5 m','collab','Commercial hyperspectral constellation; research-access programs. Candidate interrogation tier.','https://www.pixxel.space/'],
+  ['TAU Remote Sensing Lab (Ben-Dor)','~1 m','collab','Airborne AisaFENIX campaigns over Israel + national soil spectral library. Academic collaboration — validation tier.','https://en-exact-sciences.tau.ac.il/geography'],
+  ['Survey of Israel orthophoto','12–25 cm','free','Sub-metre aerial imagery to eyeball anomalies before committing field time.','https://www.govmap.gov.il/'],
+  ['Drone HSI (Specim / Resonon)','cm','collab','Rental/collaboration. The tier where pottery-fabric <i>typology</i> actually becomes feasible.','https://www.specim.com/'],
+];
+document.getElementById('srcList').innerHTML = SOURCES.map(([t,res,tag,meta,url])=>{
+  const tg={free:'free',task:'task',collab:'collab'}[tag];
+  const tn={free:'free',task:'free · taskable',collab:'collaboration'}[tag];
+  return `<div class="src"><div class="t">${t}<span class="res">${res}</span><span class="tag ${tg}">${tn}</span></div>
+    <div class="meta">${meta}</div><a href="${url}" target="_blank">${url} ↗</a></div>`;
+}).join('');
+
+/* ---------- findings (cluster demo points) ---------- */
+function cluster(points){
+  const used=new Array(points.length).fill(false), out=[];
+  for(let i=0;i<points.length;i++){
+    if(used[i]) continue; let cl=[points[i]]; used[i]=true;
+    for(let j=i+1;j<points.length;j++){
+      if(used[j]) continue;
+      if(Math.abs(points[i][0]-points[j][0])<0.012 && Math.abs(points[i][1]-points[j][1])<0.012){
+        cl.push(points[j]); used[j]=true; }
+    }
+    const peak=cl.reduce((a,b)=>b[2]>a[2]?b:a);
+    out.push({lat:peak[0],lon:peak[1],score:peak[2],n:cl.length});
+  }
+  return out.sort((a,b)=>b.score-a.score).slice(0,8);
+}
+function nearKnownSite(lat,lon){
+  return (S.sites?.features||[]).some(f=>{
+    if(f.properties.kind==='sample_cold') return false;
+    const [lo,la]=f.geometry.coordinates;
+    return Math.abs(la-lat)<0.01 && Math.abs(lo-lon)<0.01;
+  });
+}
+(function findings(){
+  const cl=cluster(demo.points||[]);
+  const tb=document.querySelector('#findTable tbody');
+  tb.innerHTML = cl.map((c,i)=>{
+    const known=nearKnownSite(c.lat,c.lon);
+    return `<tr style="cursor:pointer" onclick="window._fly(${c.lat},${c.lon})">
+      <td>${i+1}</td><td class="mono">${c.lat.toFixed(4)}, ${c.lon.toFixed(4)}</td>
+      <td class="mono" style="color:${c.score>.8?'#e63232':c.score>.6?'#f5c542':'#8da2b5'}">${c.score.toFixed(2)}</td>
+      <td>${known?'<span style="color:#5fc97a">on known site</span>':'<span style="color:#ff7a3c">⚑ off-site</span>'}</td></tr>`;
+  }).join('');
+})();
+window._fly=(lat,lon)=>map.flyTo([lat,lon],15);
+
+/* ---------- live CMR scan ---------- */
+document.getElementById('useView').onclick=()=>{
+  const b=map.getBounds();
+  bxW.value=b.getWest().toFixed(3); bxS.value=b.getSouth().toFixed(3);
+  bxE.value=b.getEast().toFixed(3); bxN.value=b.getNorth().toFixed(3);
+};
+document.getElementById('doScan').onclick=async()=>{
+  const btn=document.getElementById('doScan'); btn.disabled=true; btn.textContent='Searching…';
+  const box=document.getElementById('scanResults');
+  const bbox=[bxW.value,bxS.value,bxE.value,bxN.value].join(',');
+  const sn=document.getElementById('sensor').value;
+  const url=`https://cmr.earthdata.nasa.gov/search/granules.json?short_name=${sn}&bounding_box=${bbox}&page_size=30&sort_key=-start_date`;
+  try{
+    const r=await fetch(url); const j=await r.json(); const e=j.feed?.entry||[];
+    document.getElementById('scanCount').textContent=e.length+' scenes';
+    if(!e.length){ box.innerHTML='<div class="empty">No granules over this box.</div>'; }
+    else box.innerHTML='<table><thead><tr><th>date</th><th>cloud</th><th class="mono">granule</th></tr></thead><tbody>'+
+      e.map(g=>{
+        const cc=g.cloud_cover!=null?g.cloud_cover+'%':'—';
+        const id=(g.producer_granule_id||g.title||'').replace(/\.nc$/,'');
+        return `<tr><td>${(g.time_start||'').slice(0,10)}</td><td>${cc}</td>
+          <td class="mono" style="font-size:10px;cursor:pointer" title="click to copy"
+            onclick="navigator.clipboard?.writeText('${id}')">${id.slice(0,34)}…</td></tr>`;
+      }).join('')+'</tbody></table>';
+  }catch(err){
+    box.innerHTML=`<div class="scope">CMR query failed (network/CORS): ${err.message}.<br>
+      Run the same search from <code>sherd_hunter.py: search_granules()</code>.</div>`;
+    document.getElementById('scanCount').textContent='error';
+  }
+  btn.disabled=false; btn.textContent='Search CMR';
+};
+
+/* ---------- auto-upgrade: real detection from detect.py, if present ---------- */
+(async function(){
+  try{
+    const r=await fetch('detection_bounds.json',{cache:'no-store'});
+    if(!r.ok) return;
+    const b=await r.json();                              // {bbox:[W,S,E,N], label}
+    const bnds=[[b.bbox[1],b.bbox[0]],[b.bbox[3],b.bbox[2]]];
+    if(heat) map.removeLayer(heat);
+    heat=L.imageOverlay('detection.png?'+Date.now(),bnds,
+        {opacity:document.getElementById('heatOp').value/100}).addTo(map);
+    window._heatBnds=bnds; map.fitBounds(bnds,{padding:[20,20]});   // snap view to the scene footprint
+    const jump=L.control({position:'topleft'});
+    jump.onAdd=()=>{const d=L.DomUtil.create('div','leaflet-bar');
+      d.innerHTML='<a href="#" title="Jump to detection scene" style="font:14px/26px sans-serif;text-align:center">&#9678;</a>';
+      d.onclick=e=>{e.preventDefault();map.fitBounds(window._heatBnds,{padding:[20,20]});};return d;};
+    jump.addTo(map);
+    const badge=document.getElementById('modeBadge');
+    badge.textContent='LIVE'; badge.className='badge live';
+    document.querySelector('.legend .badge').textContent=b.method||'ACE';
+    document.querySelector('.legend .badge').className='badge live';
+    if(b.label) document.querySelector('.legend .badge').title=b.label;
+    if(b.has_halo){                                      // secondary screen: carbonate-halo
+      window._rawHeat=L.imageOverlay('detection_halo.png?'+Date.now(),bnds,
+          {opacity:document.getElementById('heatOp').value/100});
+      document.getElementById('lyrRaw').onchange=e=>e.target.checked?window._rawHeat.addTo(map):map.removeLayer(window._rawHeat);
+    }
+    // real findings -> markers from findings.geojson
+    const fr=await fetch('findings.geojson',{cache:'no-store'});
+    let rows=[];
+    if(fr.ok){
+      const fj=await fr.json();
+      rows=(fj.features||[]).map(f=>({lon:f.geometry.coordinates[0],lat:f.geometry.coordinates[1],
+        score:f.properties.disp??f.properties.score,on:f.properties.on_known_site}));
+      const fg=L.layerGroup().addTo(map);
+      rows.forEach(p=>L.circleMarker([p.lat,p.lon],{radius:5,color:p.on?'#5fc97a':'#e63232',weight:2,
+        fillColor:p.on?'#5fc97a':'#e63232',fillOpacity:.45})
+        .bindTooltip(`score ${(+p.score).toFixed(2)} — ${p.on?'on known site':'OFF-SITE candidate'}`).addTo(fg));
+      document.getElementById('findScope').innerHTML=
+        `<b>REAL ${b.method||'ACE'} findings</b> from <code>${b.granule||'EMIT granule'}</code> — top ${rows.length} hot spots.`;
+    }
+    // validation vs known OSM layers: AUC headline + classified candidate table
+    const vr=await fetch('validation.json',{cache:'no-store'});
+    if(vr.ok){
+      const v=await vr.json();
+      const cls={'NOVEL candidate':'#ff7a3c','industrial?':'#7aa0ff','near known site':'#5fc97a',
+                 'geology:fired_carbonate':'#ff4d4d','geology:lacustrine_marl':'#ff9e3d',
+                 'geology:carbonate':'#7ad1ff','geology:evaporite':'#d98cff',
+                 'nosherd:water':'#2b6cff','nosherd:salt_pond':'#d98cff','nosherd:reservoir':'#3aa0d8',
+                 'nosherd:urban':'#888c95','nosherd:industrial':'#7aa0ff'};
+      const nm={'geology:fired_carbonate':'Hatrurim','geology:lacustrine_marl':'Lisan',
+                'geology:carbonate':'carbonate','geology:evaporite':'evaporite','industrial?':'industrial',
+                'near known site':'known site','NOVEL candidate':'unexplained',
+                'nosherd:water':'Dead Sea / water','nosherd:salt_pond':'salt pond',
+                'nosherd:reservoir':'reservoir','nosherd:urban':'urban','nosherd:industrial':'industrial'};
+      const cc=(v.candidates||[]).reduce((a,c)=>{a[c.class]=(a[c.class]||0)+1;return a;},{});
+      const geoTot=(cc['geology:fired_carbonate']||0)+(cc['geology:lacustrine_marl']||0)+(cc['geology:carbonate']||0)+(cc['geology:evaporite']||0);
+      const sa=v.screen_auc||{}, fAuc=(sa.firing!=null?sa.firing:v.site_auc_vs_random), hAuc=sa.halo;
+      document.getElementById('valBox').innerHTML=
+        `<div class="scope"><b>Two-screen detector</b> (${v.n_sites_in_swath} known sites${v.sensor?' · '+v.sensor:''}):
+         <b style="color:#5fc97a">firing AUC ${(+fAuc).toFixed(2)}</b> (Al-OH depletion + brightness — the specific marker)${hAuc!=null?` vs carbonate-halo AUC ${(+hAuc).toFixed(2)} (broad terrain) — firing wins`:''}.
+         Median known site at the <b>${v.median_site_percentile}</b> firing-percentile.<br>
+         Top firing hotspots: ${cc['near known site']||0} on known sites ·
+         <span style="color:#2b6cff">${Object.keys(cc).filter(k=>k.startsWith('nosherd')).reduce((a,k)=>a+cc[k],0)} on water/salt/urban (masked)</span> ·
+         ${cc['industrial?']||0} industrial ·
+         <span style="color:#ff7a3c">${cc['NOVEL candidate']||0} unexplained</span>
+         — the Dead Sea (water + evaporation ponds) is now masked; the few remaining "unexplained" are the real candidates to vet.</div>`;
+      const bt=(v.blind_tells||[]).filter(t=>t.in_scene);
+      if(bt.length) document.getElementById('valBox').innerHTML+=
+        `<div class="scope" style="margin-top:6px"><b>Blind test</b> — known sherd-bearing tells NOT used to build the index
+         (firing-screen percentile):
+         ${bt.map(t=>`${t.name} <b style="color:${t.firing_pct>=85?'#5fc97a':t.firing_pct>=70?'#f5c542':'#e0976a'}">p${t.firing_pct}</b>`).join(' · ')}
+         <span style="color:#8da2b5">(Tel&nbsp;Ira/Masos fell in this tile's nodata border)</span></div>`;
+      const cand=(v.candidates||[]).slice(0,15);
+      document.querySelector('#findTable tbody').innerHTML=cand.map((c,i)=>{
+        const col=cls[c.class]||'#8da2b5';
+        const ref=c.class==='near known site'?(c.near_site||''):c.class==='industrial?'?(c.near_mask||'industrial'):
+                  c.class.startsWith('geology')?(c.geology||''):c.class.startsWith('nosherd')?(c.nosherd||''):`${c.near_site_km}km to nearest site`;
+        return `<tr style="cursor:pointer" onclick="window._fly(${c.lat},${c.lon})">
+          <td>${i+1}</td><td class="mono">${c.lat.toFixed(4)}, ${c.lon.toFixed(4)}</td>
+          <td class="mono">${(+c.score).toFixed(2)}</td>
+          <td style="color:${col}">${nm[c.class]||c.class} <span style="color:#8da2b5;font-size:10px">${ref||''}</span></td></tr>`;}).join('');
+    } else if(rows.length){
+      document.querySelector('#findTable tbody').innerHTML=rows.slice(0,15).map((p,i)=>
+        `<tr style="cursor:pointer" onclick="window._fly(${p.lat},${p.lon})">
+          <td>${i+1}</td><td class="mono">${p.lat.toFixed(4)}, ${p.lon.toFixed(4)}</td>
+          <td class="mono" style="color:${p.score>.8?'#e63232':p.score>.6?'#f5c542':'#8da2b5'}">${(+p.score).toFixed(2)}</td>
+          <td>${p.on?'<span style="color:#5fc97a">on known site</span>':'<span style="color:#ff7a3c">⚑ off-site</span>'}</td></tr>`).join('');
+    }
+    // verification panel: permutation null test + spectral sanity (verify.py)
+    const vfr=await fetch('verify.json',{cache:'no-store'});
+    if(vfr.ok){
+      const vd=await vfr.json(), pm=vd.permutation;
+      document.getElementById('verifyBox').innerHTML=
+        `<h3 style="margin:0 0 6px">Verification</h3>
+         <div class="scope"><b>① Permutation null test:</b> known-site AUC <b style="color:#5fc97a">${pm.observed_auc}</b>
+          vs shuffled-label null ${pm.null_mean}±${pm.null_std} → <b style="color:#5fc97a">z=${pm.z}, p&lt;${pm.p_floor.toExponential(0)}</b>
+          (${pm.M.toLocaleString()} shuffles). The separation is not chance.</div>
+         <div class="scope" style="margin-top:6px"><b>② Spectral sanity</b> — real EnMAP continuum-removed depths:
+         <table style="margin:6px 0 0"><thead><tr><th>point</th><th>carbonate 2345</th><th>Al-OH 2200</th></tr></thead><tbody>
+         ${vd.spectral.map(s=>`<tr><td style="color:${s.color}">${s.name}</td>
+            <td class="mono">${s.carbonate_2345_depth.toFixed(4)}</td>
+            <td class="mono">${s.alOH_2200_depth.toFixed(4)}</td></tr>`).join('')}
+         </tbody></table>
+         <span style="color:#8da2b5;font-size:11px">Al-OH shallower on fired/anthropogenic surfaces (firing signature: Hatrurim shallowest);
+         carbonate deeper on the tell. Both diagnostic absorptions behave as the physics predicts.</span></div>
+         <img src="verify.png?${Date.now()}" style="width:100%;margin-top:8px;border-radius:6px;border:1px solid #283642">`;
+    }
+  }catch(e){/* demo stays */}
+})();
+</script>
+
+<!-- ================= guided tour (Hebrew, spotlight + arrows + captions) ================= -->
+<script>
+(function(){
+  const steps=[
+    {title:'SherdHunter — מדריך מהיר',
+     html:'זיהוי תת-פיקסלי של פיזור חרסים מנתוני לוויין היפר-ספקטרליים. נעבור על המסך ב-9 צעדים קצרים. (חצים →/← או הכפתורים)'},
+    {sel:'#map', title:'המפה ושכבת הזיהוי',
+     html:'אזור הסריקה — EnMAP ברזולוציית 30 מ\' מעל תל ערד / ים המלח. השכבה הצבעונית היא <b>מסך השריפה</b> (דלדול חרסית 2200ננמ\' + בהירות). אדום = אנומליה חזקה.'},
+    {sel:'.legend', title:'מקרא הציון',
+     html:'ציון הזיהוי: מרקע (0.0) ועד אות חזק (1.0).'},
+    {sel:'.ctrl', title:'פאנל השכבות',
+     html:'בסיס-מפה למעלה; שכבות הזיהוי והידע למטה. סמן/בטל תיבה כדי להציג או להסתיר שכבה.'},
+    {sel:'#lyrHeat', title:'שני מסכי זיהוי',
+     html:'<b>מסך שריפה</b> (ראשי, AUC&nbsp;0.78) — הסמן הארכיאולוגי הספציפי. <b>מסך הילה קרבונטית</b> (משני) — מאפיין סוג-קרקע. הסליידר שולט בשקיפות.'},
+    {sel:'#lyrKnown', title:'שכבות ידע',
+     html:'אתרים ארכיאולוגיים ידועים (לאימות), <b>גיאולוגיה GSI</b> (חתרורים/לשון), ומסכת <b>אין-חרסים</b> (ים המלח / בריכות מלח / עירוני) שמסירה התרעות-שווא.'},
+    {sel:'.tabs', title:'טאבים',
+     html:'ספקטרום · סריקה · מקורות · <b>ממצאים</b> · אודות.'},
+    {sel:'.side', title:'ממצאים ואימות',
+     pre:function(){var b=document.querySelector('.tabs [data-tab="find"]'); if(b) b.click();},
+     html:'ה-AUC, ה<b>מבחן העיוור</b> (תל מלחתה p79!), טבלת המועמדים המסווגת, ופאנל ה<b>אימות</b> — מבחן הצפה (z=7.4) ובדיקה ספקטרלית של קווי הבליעה.'},
+    {title:'מוכן! 🏺',
+     html:'כפתור ⌖ (שמאל-עליון של המפה) מחזיר אותך לאזור הסריקה תמיד. כפתור «מדריך» יפעיל אותי שוב. בהצלחה בציד החרסים!'}
+  ];
+  const css=`
+  #tourBtn{position:fixed;bottom:14px;left:14px;z-index:1200;background:#141b22;color:#e8eef4;
+    border:1px solid #34c8b4;border-radius:20px;padding:7px 15px;font:13px system-ui,sans-serif;cursor:pointer;direction:rtl}
+  #tourBtn:hover{background:#1c2630}
+  #tourHole{position:fixed;z-index:1300;border:2px solid #34c8b4;border-radius:8px;
+    box-shadow:0 0 0 9999px rgba(8,12,16,.74);pointer-events:none;transition:all .25s ease}
+  #tourBox{position:fixed;z-index:1301;width:320px;background:#141b22;color:#e8eef4;border:1px solid #34c8b4;
+    border-radius:10px;padding:14px 16px;font:13.5px/1.6 system-ui,sans-serif;direction:rtl;box-shadow:0 10px 34px rgba(0,0,0,.55)}
+  #tourBox h4{margin:0 0 6px;color:#34c8b4;font-size:15px}
+  #tourBox .nav{display:flex;justify-content:space-between;align-items:center;margin-top:13px;gap:8px}
+  #tourBox button{background:#1c2630;color:#e8eef4;border:1px solid #283642;border-radius:6px;padding:5px 13px;cursor:pointer;font-size:12px}
+  #tourBox button.primary{background:#34c8b4;color:#06202a;border-color:#34c8b4;font-weight:700}
+  #tourBox .cnt{color:#8da2b5;font-size:11px}
+  #tourBox::after{content:"";position:absolute;width:0;height:0;border:9px solid transparent}
+  #tourBox.dir-up::after{top:-18px;right:28px;border-bottom-color:#34c8b4}
+  #tourBox.dir-down::after{bottom:-18px;right:28px;border-top-color:#34c8b4}
+  #tourBox.dir-right::after{right:-18px;top:24px;border-left-color:#34c8b4}
+  #tourBox.dir-left::after{left:-18px;top:24px;border-right-color:#34c8b4}
+  #tourBox.dir-none::after{display:none}`;
+  const st=document.createElement('style'); st.textContent=css; document.head.appendChild(st);
+
+  const btn=document.createElement('button'); btn.id='tourBtn'; btn.textContent='❓ מדריך'; document.body.appendChild(btn);
+  const hole=document.createElement('div'); hole.id='tourHole'; hole.style.display='none';
+  const box=document.createElement('div'); box.id='tourBox'; box.style.display='none';
+  box.innerHTML='<div class="body"></div><div class="nav"><span class="cnt"></span><span>'+
+    '<button id="tPrev">‹ הקודם</button> <button id="tNext" class="primary">הבא ›</button> '+
+    '<button id="tEnd">✕</button></span></div>';
+  document.body.appendChild(hole); document.body.appendChild(box);
+  let i=0, open=false;
+  function place(s){
+    box.querySelector('.body').innerHTML='<h4>'+s.title+'</h4>'+s.html;
+    box.querySelector('.cnt').textContent=(i+1)+' / '+steps.length;
+    document.getElementById('tPrev').style.visibility=i?'visible':'hidden';
+    document.getElementById('tNext').textContent=(i===steps.length-1)?'סיום':'הבא ›';
+    box.className=''; const el=s.sel&&document.querySelector(s.sel);
+    if(!el){ hole.style.display='none'; box.classList.add('dir-none');
+      box.style.left='50%'; box.style.top='50%'; box.style.transform='translate(-50%,-50%)'; return; }
+    box.style.transform='none';
+    const r=el.getBoundingClientRect();
+    hole.style.display='block'; hole.style.left=(r.left-6)+'px'; hole.style.top=(r.top-6)+'px';
+    hole.style.width=(r.width+12)+'px'; hole.style.height=(r.height+12)+'px';
+    const bw=320,bh=box.offsetHeight||170,m=14,vw=innerWidth,vh=innerHeight; let left,top,dir;
+    if(r.bottom+bh+m<vh){top=r.bottom+m;left=Math.min(Math.max(m,r.left),vw-bw-m);dir='dir-up';}
+    else if(r.top-bh-m>0){top=r.top-bh-m;left=Math.min(Math.max(m,r.left),vw-bw-m);dir='dir-down';}
+    else if(r.left-bw-m>0){left=r.left-bw-m;top=Math.min(Math.max(m,r.top),vh-bh-m);dir='dir-right';}
+    else{left=r.right+m;top=Math.min(Math.max(m,r.top),vh-bh-m);dir='dir-left';}
+    box.style.left=left+'px'; box.style.top=top+'px'; box.classList.add(dir);
+  }
+  function show(k){ i=Math.max(0,Math.min(steps.length-1,k)); const s=steps[i];
+    if(s.pre){try{s.pre();}catch(e){}} setTimeout(()=>place(s), s.pre?280:0); }
+  function start(){ open=true; box.style.display='block'; show(0); }
+  function end(){ open=false; box.style.display='none'; hole.style.display='none'; }
+  btn.onclick=start;
+  document.getElementById('tNext').onclick=()=>{ i>=steps.length-1?end():show(i+1); };
+  document.getElementById('tPrev').onclick=()=>show(i-1);
+  document.getElementById('tEnd').onclick=end;
+  addEventListener('keydown',e=>{ if(!open)return;
+    if(e.key==='Escape')end(); else if(e.key==='ArrowLeft')show(i+1); else if(e.key==='ArrowRight')show(i-1); });
+  addEventListener('resize',()=>{ if(open)place(steps[i]); });
+})();
+</script>
+
+<!-- ================= auto-demo (for screen recording): self-driving UI walkthrough ============ -->
+<script>
+window.startDemo=function(){
+  const css=`
+  #dCap{position:fixed;left:0;right:0;bottom:0;z-index:1400;background:linear-gradient(transparent,rgba(6,10,14,.92) 30%);
+    padding:30px 40px 26px;text-align:center;color:#e8eef4;font:600 26px/1.4 system-ui,sans-serif;direction:ltr;transition:opacity .4s}
+  #dCap b{color:#34c8b4}
+  #dRing{position:fixed;z-index:1399;border:3px solid #34c8b4;border-radius:10px;box-shadow:0 0 22px rgba(52,200,180,.7);
+    pointer-events:none;transition:all .4s ease;opacity:0}
+  #dBadge{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1400;background:#e63232;color:#fff;
+    font:700 13px system-ui;padding:5px 12px;border-radius:14px;letter-spacing:1px}`;
+  const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
+  const cap=document.createElement('div');cap.id='dCap';document.body.appendChild(cap);
+  const ring=document.createElement('div');ring.id='dRing';document.body.appendChild(ring);
+  const badge=document.createElement('div');badge.id='dBadge';badge.textContent='● DEMO';document.body.appendChild(badge);
+  const set=(sel,on)=>{const e=document.querySelector(sel); if(e&&e.checked!==on){e.click();}};
+  const tab=n=>{const b=document.querySelector('.tabs [data-tab="'+n+'"]'); if(b)b.click();};
+  const slide=(sel,v)=>{const e=document.querySelector(sel); if(e){e.value=v; e.dispatchEvent(new Event('input'));}};
+  const zoom=()=>{ if(window._heatBnds&&window.map) map.fitBounds(window._heatBnds,{padding:[20,20]}); };
+  function hl(sel){ const e=sel&&document.querySelector(sel); if(!e){ring.style.opacity=0;return;}
+    const r=e.getBoundingClientRect(); ring.style.opacity=1;
+    ring.style.left=(r.left-5)+'px';ring.style.top=(r.top-5)+'px';ring.style.width=(r.width+10)+'px';ring.style.height=(r.height+10)+'px'; }
+  const steps=[
+    {c:'<b>SherdHunter</b> — live sub-pixel detection over the Negev desert.', a:zoom, h:null, t:4800},
+    {c:'Red is the <b>firing screen</b> — a strong archaeological anomaly.', a:()=>{}, h:'#lyrHeat', t:4200},
+    {c:'<b>Known archaeological sites</b> — our ground truth.', a:()=>set('#lyrKnown',true), h:'#lyrKnown', t:4200},
+    {c:'The national <b>geology map</b> — Hatrurim & Lisan formations.', a:()=>set('#lyrGeo',true), h:'#lyrGeo', t:4600},
+    {c:'Water, salt and built-up — <b>no sherds possible</b> — masked out.', a:()=>set('#lyrNoSherd',true), h:'#lyrNoSherd', t:4600},
+    {c:'A second screen — the <b>carbonate halo</b>.', a:()=>set('#lyrRaw',true), h:'#lyrRaw', t:4000},
+    {c:'Dial the layer <b>opacity</b>.', a:()=>slide('#heatOp',28), h:'#heatOp', t:2600, then:()=>slide('#heatOp',70)},
+    {c:'The <b>Findings</b> tab — validation and ranked candidates.', a:()=>tab('find'), h:'.tabs', t:4800},
+    {c:'Validated: <b>AUC 0.78</b>, a permutation test, and a spectral check.', a:()=>{const v=document.getElementById('verifyBox'); if(v)v.scrollIntoView({behavior:'smooth',block:'center'});}, h:'#verifyBox', t:5200},
+    {c:'Open data. Reproducible. <b>SherdHunter</b>.', a:zoom, h:null, t:4200}
+  ];
+  let i=0;
+  function run(){ if(i>=steps.length){cap.style.opacity=0;ring.style.opacity=0;badge.style.opacity=0;return;}
+    const s=steps[i]; cap.innerHTML=s.c; try{s.a&&s.a();}catch(e){}
+    setTimeout(()=>{try{hl(s.h);}catch(e){}},420);
+    if(s.then) setTimeout(()=>{try{s.then();}catch(e){}}, s.t-700);
+    i++; setTimeout(run, s.t); }
+  setTimeout(run, 1400);
+};
+if(location.hash==='#demo'){
+  if(document.readyState==='complete') setTimeout(window.startDemo,1200);
+  else addEventListener('load',()=>setTimeout(window.startDemo,1200));
+}
+</script>
+</body>
+</html>

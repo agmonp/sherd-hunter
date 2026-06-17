@@ -1,0 +1,1080 @@
+{
+ "scene": "enmap_DT0000069168_SPECTRAL.tiff",
+ "sensor": "EnMAP L2A 30 m",
+ "n_sites_in_scene": 78,
+ "screen_auc": {
+  "firing": 0.7759,
+  "halo": 0.7484
+ },
+ "site_auc_vs_random": 0.7759,
+ "median_site_percentile": 85.5,
+ "blind_tells": [
+  {
+   "name": "Tel Arad (ref)",
+   "in_scene": true,
+   "lon": 35.1247,
+   "lat": 31.2803,
+   "firing_pct": 88.3,
+   "halo_pct": 86.3
+  },
+  {
+   "name": "Tel Ira",
+   "in_scene": false
+  },
+  {
+   "name": "Tel Malhata",
+   "in_scene": true,
+   "lon": 35.0417,
+   "lat": 31.2306,
+   "firing_pct": 79.3,
+   "halo_pct": 80.6
+  },
+  {
+   "name": "Tel Masos",
+   "in_scene": false
+  },
+  {
+   "name": "Mezad Bokek",
+   "in_scene": true,
+   "lon": 35.366,
+   "lat": 31.183,
+   "firing_pct": 99.9,
+   "halo_pct": 74.7
+  }
+ ],
+ "tel_arad": {
+  "firing_pct": 88.3,
+  "halo_pct": 86.3
+ },
+ "sites": [
+  {
+   "name": "Administration Building",
+   "category": "archaeological_site",
+   "lon": 35.3544,
+   "lat": 31.3172,
+   "score": 4.293,
+   "pct": 99.9
+  },
+  {
+   "name": "Storerooms",
+   "category": "archaeological_site",
+   "lon": 35.3542,
+   "lat": 31.3175,
+   "score": 3.959,
+   "pct": 99.8
+  },
+  {
+   "name": "Thermal Baths",
+   "category": "archaeological_site",
+   "lon": 35.3541,
+   "lat": 31.3177,
+   "score": 3.959,
+   "pct": 99.8
+  },
+  {
+   "name": "ruins",
+   "category": "ruins",
+   "lon": 35.3629,
+   "lat": 31.1997,
+   "score": 3.918,
+   "pct": 99.8
+  },
+  {
+   "name": "Mezad Bokek",
+   "category": "ruins",
+   "lon": 35.3588,
+   "lat": 31.2012,
+   "score": 3.675,
+   "pct": 99.7
+  },
+  {
+   "name": "Camp H'",
+   "category": "archaeological_site",
+   "lon": 35.3532,
+   "lat": 31.3091,
+   "score": 3.556,
+   "pct": 99.6
+  },
+  {
+   "name": "Camp E'",
+   "category": "archaeological_site",
+   "lon": 35.3501,
+   "lat": 31.3183,
+   "score": 3.113,
+   "pct": 99.2
+  },
+  {
+   "name": "archaeological_site",
+   "category": "archaeological_site",
+   "lon": 35.1949,
+   "lat": 31.2562,
+   "score": 2.497,
+   "pct": 98.3
+  },
+  {
+   "name": "grand residence",
+   "category": "archaeological_site",
+   "lon": 35.3544,
+   "lat": 31.317,
+   "score": 2.366,
+   "pct": 97.9
+  },
+  {
+   "name": "Administration Building",
+   "category": "archaeological_site",
+   "lon": 35.3537,
+   "lat": 31.3174,
+   "score": 2.26,
+   "pct": 97.6
+  },
+  {
+   "name": "The Aradian House",
+   "category": "archaeological_site",
+   "lon": 35.1241,
+   "lat": 31.2782,
+   "score": 2.113,
+   "pct": 97.1
+  },
+  {
+   "name": "Camp A'",
+   "category": "archaeological_site",
+   "lon": 35.3613,
+   "lat": 31.3129,
+   "score": 2.11,
+   "pct": 97.0
+  },
+  {
+   "name": "Camp F'",
+   "category": "archaeological_site",
+   "lon": 35.3497,
+   "lat": 31.3203,
+   "score": 2.037,
+   "pct": 96.7
+  },
+  {
+   "name": "\u05de\u05e6\u05d3 \u05d6\u05d4\u05e8 \u05d4\u05de\u05d6\u05e8\u05d7\u05d9",
+   "category": "archaeological_site",
+   "lon": 35.3572,
+   "lat": 31.1499,
+   "score": 1.837,
+   "pct": 95.6
+  },
+  {
+   "name": "Mezad Zohar",
+   "category": "ruins",
+   "lon": 35.3464,
+   "lat": 31.1512,
+   "score": 1.766,
+   "pct": 95.1
+  },
+  {
+   "name": "\u05de\u05d2\u05d3\u05dc \u05d2\u05d5\u05e8\u05e8",
+   "category": "archaeological_site",
+   "lon": 35.249,
+   "lat": 31.1601,
+   "score": 1.707,
+   "pct": 94.6
+  },
+  {
+   "name": "archaeological_site",
+   "category": "archaeological_site",
+   "lon": 35.1883,
+   "lat": 31.2549,
+   "score": 1.703,
+   "pct": 94.6
+  },
+  {
+   "name": "Rug'um Zohar",
+   "category": "archaeological_site",
+   "lon": 35.2421,
+   "lat": 31.2354,
+   "score": 1.667,
+   "pct": 94.3
+  },
+  {
+   "name": "Khirbet Abu Shaban",
+   "category": "ruins",
+   "lon": 35.163,
+   "lat": 31.4345,
+   "score": 1.656,
+   "pct": 94.2
+  },
+  {
+   "name": "\u05de\u05e6\u05d5\u05d3\u05ea \u05ea\u05d5\u05d5\u05d0\u05de\u05d9\u05df",
+   "category": "archaeological_site",
+   "lon": 35.1224,
+   "lat": 31.3791,
+   "score": 1.546,
+   "pct": 93.1
+  },
+  {
+   "name": "\u05de\u05e6\u05d3 \u05e6\u05e4\u05d9\u05e8\u05d4",
+   "category": "ruins",
+   "lon": 35.2739,
+   "lat": 31.3411,
+   "score": 1.542,
+   "pct": 93.1
+  },
+  {
+   "name": "\u05e8\u05d5\u05d2'\u05d5\u05dd \u05d0\u05dc \u05d7\u05de\u05d9\u05e8\u05d9",
+   "category": "ruins",
+   "lon": 35.1113,
+   "lat": 31.3963,
+   "score": 1.441,
+   "pct": 91.9
+  },
+  {
+   "name": "Horbat `Uza",
+   "category": "ruins",
+   "lon": 35.1655,
+   "lat": 31.2092,
+   "score": 1.408,
+   "pct": 91.5
+  },
+  {
+   "name": "Camp G'",
+   "category": "archaeological_site",
+   "lon": 35.3505,
+   "lat": 31.3111,
+   "score": 1.375,
+   "pct": 91.1
+  },
+  {
+   "name": "\u05e1\u05d1\u05d9\u05dc",
+   "category": "archaeological_site",
+   "lon": 35.2704,
+   "lat": 31.3056,
+   "score": 1.343,
+   "pct": 90.6
+  },
+  {
+   "name": "\u05d4\u05e8 \u05d7\u05e6\u05e8\u05d5\u05df",
+   "category": "ruins",
+   "lon": 35.2334,
+   "lat": 31.3753,
+   "score": 1.333,
+   "pct": 90.5
+  },
+  {
+   "name": "\u05e1\u05d1\u05d9\u05dc",
+   "category": "archaeological_site",
+   "lon": 35.2691,
+   "lat": 31.3054,
+   "score": 1.328,
+   "pct": 90.4
+  },
+  {
+   "name": "archaeological_site",
+   "category": "archaeological_site",
+   "lon": 35.3494,
+   "lat": 31.3203,
+   "score": 1.31,
+   "pct": 90.1
+  },
+  {
+   "name": "Tel Ira",
+   "category": "archaeological_site",
+   "lon": 34.9856,
+   "lat": 31.2331,
+   "score": 1.195,
+   "pct": 88.2
+  },
+  {
+   "name": "barracks",
+   "category": "archaeological_site",
+   "lon": 35.3537,
+   "lat": 31.3166,
+   "score": 1.185,
+   "pct": 88.0
+  },
+  {
+   "name": "Tower",
+   "category": "archaeological_site",
+   "lon": 35.3538,
+   "lat": 31.3172,
+   "score": 1.185,
+   "pct": 88.0
+  },
+  {
+   "name": "Tanners' Tower",
+   "category": "archaeological_site",
+   "lon": 35.3527,
+   "lat": 31.316,
+   "score": 1.128,
+   "pct": 86.9
+  },
+  {
+   "name": "The Synagogue",
+   "category": "archaeological_site",
+   "lon": 35.3532,
+   "lat": 31.3174,
+   "score": 1.127,
+   "pct": 86.9
+  },
+  {
+   "name": "Guard Room",
+   "category": "archaeological_site",
+   "lon": 35.3537,
+   "lat": 31.3177,
+   "score": 1.127,
+   "pct": 86.9
+  },
+  {
+   "name": "archaeological_site",
+   "category": "archaeological_site",
+   "lon": 35.3535,
+   "lat": 31.3175,
+   "score": 1.127,
+   "pct": 86.9
+  },
+  {
+   "name": "The Byzantine Gate",
+   "category": "ruins",
+   "lon": 35.3527,
+   "lat": 31.3162,
+   "score": 1.128,
+   "pct": 86.9
+  },
+  {
+   "name": "\u05d2\u05ea",
+   "category": "archaeological_site",
+   "lon": 35.1246,
+   "lat": 31.3906,
+   "score": 1.057,
+   "pct": 85.5
+  },
+  {
+   "name": "Round Columbarium Tower",
+   "category": "archaeological_site",
+   "lon": 35.3535,
+   "lat": 31.3144,
+   "score": 1.058,
+   "pct": 85.5
+  },
+  {
+   "name": "Small Palace",
+   "category": "archaeological_site",
+   "lon": 35.353,
+   "lat": 31.3148,
+   "score": 1.058,
+   "pct": 85.5
+  },
+  {
+   "name": "Public Immersion Pool",
+   "category": "archaeological_site",
+   "lon": 35.3532,
+   "lat": 31.3152,
+   "score": 1.058,
+   "pct": 85.5
+  },
+  {
+   "name": "Small Palace",
+   "category": "archaeological_site",
+   "lon": 35.3535,
+   "lat": 31.3151,
+   "score": 1.058,
+   "pct": 85.5
+  },
+  {
+   "name": "Small Palace",
+   "category": "archaeological_site",
+   "lon": 35.354,
+   "lat": 31.3149,
+   "score": 0.999,
+   "pct": 84.2
+  },
+  {
+   "name": "ruins",
+   "category": "ruins",
+   "lon": 35.3382,
+   "lat": 31.352,
+   "score": 0.963,
+   "pct": 83.3
+  },
+  {
+   "name": "Horvat Qitmit",
+   "category": "archaeological_site",
+   "lon": 35.0677,
+   "lat": 31.1844,
+   "score": 0.937,
+   "pct": 82.7
+  },
+  {
+   "name": "The Byzantine church",
+   "category": "archaeological_site",
+   "lon": 35.3533,
+   "lat": 31.3163,
+   "score": 0.916,
+   "pct": 82.2
+  },
+  {
+   "name": "The Israelite Temple",
+   "category": "archaeological_site",
+   "lon": 35.1261,
+   "lat": 31.2808,
+   "score": 0.889,
+   "pct": 81.5
+  },
+  {
+   "name": "The Fortresses Mound",
+   "category": "archaeological_site",
+   "lon": 35.1262,
+   "lat": 31.2807,
+   "score": 0.889,
+   "pct": 81.5
+  },
+  {
+   "name": "ruins",
+   "category": "ruins",
+   "lon": 35.1256,
+   "lat": 31.2809,
+   "score": 0.889,
+   "pct": 81.5
+  },
+  {
+   "name": "Mezad Hatrurim",
+   "category": "archaeological_site",
+   "lon": 35.3055,
+   "lat": 31.2231,
+   "score": 0.877,
+   "pct": 81.2
+  },
+  {
+   "name": "Masada",
+   "category": "archaeological_site",
+   "lon": 35.3537,
+   "lat": 31.3156,
+   "score": 0.789,
+   "pct": 78.8
+  },
+  {
+   "name": "\u05e1\u05d1\u05d9\u05dc",
+   "category": "archaeological_site",
+   "lon": 35.2702,
+   "lat": 31.3038,
+   "score": 0.775,
+   "pct": 78.4
+  },
+  {
+   "name": "\u05e1\u05d1\u05d9\u05dc",
+   "category": "archaeological_site",
+   "lon": 35.2704,
+   "lat": 31.3043,
+   "score": 0.775,
+   "pct": 78.4
+  },
+  {
+   "name": "Western Palace",
+   "category": "archaeological_site",
+   "lon": 35.353,
+   "lat": 31.3157,
+   "score": 0.77,
+   "pct": 78.2
+  },
+  {
+   "name": "\u05d1\u05e1\u05d9\u05e1 \u05e8\u05d9\u05d7\u05d9\u05d9\u05dd",
+   "category": "archaeological_site",
+   "lon": 35.1326,
+   "lat": 31.4088,
+   "score": 0.716,
+   "pct": 76.6
+  },
+  {
+   "name": "ruins",
+   "category": "ruins",
+   "lon": 35.1324,
+   "lat": 31.4086,
+   "score": 0.716,
+   "pct": 76.6
+  },
+  {
+   "name": "Khirbet Umm el-Amad",
+   "category": "ruins",
+   "lon": 35.0458,
+   "lat": 31.4431,
+   "score": 0.619,
+   "pct": 73.5
+  },
+  {
+   "name": "\u05e1\u05d1\u05d9\u05dc",
+   "category": "archaeological_site",
+   "lon": 35.2694,
+   "lat": 31.3056,
+   "score": 0.51,
+   "pct": 69.9
+  },
+  {
+   "name": "Tell Maon",
+   "category": "archaeological_site",
+   "lon": 35.1335,
+   "lat": 31.4094,
+   "score": 0.46,
+   "pct": 68.0
+  },
+  {
+   "name": "\u05e1\u05d1\u05d9\u05dc",
+   "category": "archaeological_site",
+   "lon": 35.2694,
+   "lat": 31.3048,
+   "score": 0.443,
+   "pct": 67.4
+  },
+  {
+   "name": "\u05d1\u05d9\u05ea \u05d4\u05db\u05e0\u05e1\u05ea \u05d4\u05e2\u05ea\u05d9\u05e7 \u05d1\u05de\u05e2\u05d5\u05df",
+   "category": "archaeological_site",
+   "lon": 35.1335,
+   "lat": 31.41,
+   "score": 0.41,
+   "pct": 66.2
+  },
+  {
+   "name": "\u05d7\u05d5\u05e8\u05d1\u05ea \u05e2\u05e0\u05d9\u05dd",
+   "category": "archaeological_site",
+   "lon": 35.0638,
+   "lat": 31.3528,
+   "score": 0.348,
+   "pct": 63.9
+  },
+  {
+   "name": "\u05de\u05d2\u05f3\u05d3\u05dc \u05d1\u05e2",
+   "category": "ruins",
+   "lon": 35.0611,
+   "lat": 31.4245,
+   "score": 0.309,
+   "pct": 62.4
+  },
+  {
+   "name": "Radum ruins",
+   "category": "archaeological_site",
+   "lon": 35.1675,
+   "lat": 31.1901,
+   "score": 0.228,
+   "pct": 59.2
+  },
+  {
+   "name": "Camp C'",
+   "category": "archaeological_site",
+   "lon": 35.3624,
+   "lat": 31.3153,
+   "score": 0.176,
+   "pct": 57.1
+  },
+  {
+   "name": "Ancient Susya Synagogue",
+   "category": "ruins",
+   "lon": 35.1019,
+   "lat": 31.4063,
+   "score": 0.025,
+   "pct": 51.0
+  },
+  {
+   "name": "Khirbet el Kufeir",
+   "category": "ruins",
+   "lon": 35.0987,
+   "lat": 31.4597,
+   "score": -0.001,
+   "pct": 50.0
+  },
+  {
+   "name": "Tel Malhata",
+   "category": "archaeological_site",
+   "lon": 35.0257,
+   "lat": 31.2173,
+   "score": -0.094,
+   "pct": 46.2
+  },
+  {
+   "name": "Khirbet Umm Lasafa",
+   "category": "ruins",
+   "lon": 35.1574,
+   "lat": 31.4382,
+   "score": -0.12,
+   "pct": 45.2
+  },
+  {
+   "name": "\u05e1\u05d1\u05d9\u05dc",
+   "category": "archaeological_site",
+   "lon": 35.2695,
+   "lat": 31.3043,
+   "score": -0.129,
+   "pct": 44.8
+  },
+  {
+   "name": "Camp B'",
+   "category": "archaeological_site",
+   "lon": 35.3637,
+   "lat": 31.3133,
+   "score": -0.176,
+   "pct": 42.9
+  },
+  {
+   "name": "Ancient Susya",
+   "category": "archaeological_site",
+   "lon": 35.1014,
+   "lat": 31.407,
+   "score": -0.192,
+   "pct": 42.3
+  },
+  {
+   "name": "Tel Arad",
+   "category": "archaeological_site",
+   "lon": 35.1255,
+   "lat": 31.2799,
+   "score": -0.226,
+   "pct": 41.0
+  },
+  {
+   "name": "\u05e1\u05d1\u05d9\u05dc",
+   "category": "archaeological_site",
+   "lon": 35.2696,
+   "lat": 31.3057,
+   "score": -0.286,
+   "pct": 38.7
+  },
+  {
+   "name": "\u05e1\u05d1\u05d9\u05dc",
+   "category": "archaeological_site",
+   "lon": 35.2695,
+   "lat": 31.3051,
+   "score": -0.286,
+   "pct": 38.7
+  },
+  {
+   "name": "Camp D'",
+   "category": "archaeological_site",
+   "lon": 35.355,
+   "lat": 31.3228,
+   "score": -0.466,
+   "pct": 32.0
+  },
+  {
+   "name": "Ancient Synagogue",
+   "category": "archaeological_site",
+   "lon": 35.0674,
+   "lat": 31.3987,
+   "score": -0.544,
+   "pct": 29.4
+  },
+  {
+   "name": "\u05d2\u05ea",
+   "category": "archaeological_site",
+   "lon": 35.1455,
+   "lat": 31.4115,
+   "score": -0.642,
+   "pct": 26.3
+  },
+  {
+   "name": "Swimming Pool",
+   "category": "archaeological_site",
+   "lon": 35.3526,
+   "lat": 31.313,
+   "score": -0.774,
+   "pct": 22.5
+  }
+ ],
+ "candidates": [
+  {
+   "lon": 35.3858,
+   "lat": 31.199,
+   "score": 9.51,
+   "near_site_km": 2.2,
+   "near_site": "",
+   "near_mask_km": 11.7,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.3927,
+   "lat": 31.1964,
+   "score": 9.1,
+   "near_site_km": 2.9,
+   "near_site": "",
+   "near_mask_km": 12.2,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.3911,
+   "lat": 31.197,
+   "score": 8.594,
+   "near_site_km": 2.7,
+   "near_site": "",
+   "near_mask_km": 12.1,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.4024,
+   "lat": 31.1946,
+   "score": 8.186,
+   "near_site_km": 3.8,
+   "near_site": "",
+   "near_mask_km": 13.0,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.4065,
+   "lat": 31.2186,
+   "score": 7.97,
+   "near_site_km": 4.7,
+   "near_site": "",
+   "near_mask_km": 12.0,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.3963,
+   "lat": 31.1766,
+   "score": 7.771,
+   "near_site_km": 4.1,
+   "near_site": "",
+   "near_mask_km": 11.8,
+   "class": "nosherd:water",
+   "nosherd": "water"
+  },
+  {
+   "lon": 35.3981,
+   "lat": 31.1855,
+   "score": 7.738,
+   "near_site_km": 3.7,
+   "near_site": "",
+   "near_mask_km": 12.2,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.408,
+   "lat": 31.2167,
+   "score": 7.673,
+   "near_site_km": 4.7,
+   "near_site": "",
+   "near_mask_km": 12.2,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.3933,
+   "lat": 31.1856,
+   "score": 7.578,
+   "near_site_km": 3.3,
+   "near_site": "",
+   "near_mask_km": 11.8,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.3937,
+   "lat": 31.1767,
+   "score": 7.568,
+   "near_site_km": 3.9,
+   "near_site": "",
+   "near_mask_km": 11.6,
+   "class": "nosherd:water",
+   "nosherd": "water"
+  },
+  {
+   "lon": 35.3967,
+   "lat": 31.1947,
+   "score": 7.543,
+   "near_site_km": 3.3,
+   "near_site": "",
+   "near_mask_km": 12.5,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.4052,
+   "lat": 31.2203,
+   "score": 7.488,
+   "near_site_km": 4.6,
+   "near_site": "",
+   "near_mask_km": 11.8,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.3875,
+   "lat": 31.1768,
+   "score": 7.22,
+   "near_site_km": 3.5,
+   "near_site": "",
+   "near_mask_km": 11.0,
+   "class": "nosherd:water",
+   "nosherd": "water"
+  },
+  {
+   "lon": 35.4008,
+   "lat": 31.1947,
+   "score": 7.191,
+   "near_site_km": 3.7,
+   "near_site": "",
+   "near_mask_km": 12.8,
+   "class": "nosherd:water",
+   "nosherd": "water"
+  },
+  {
+   "lon": 35.3962,
+   "lat": 31.1856,
+   "score": 7.093,
+   "near_site_km": 3.5,
+   "near_site": "",
+   "near_mask_km": 12.1,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.3978,
+   "lat": 31.1766,
+   "score": 7.072,
+   "near_site_km": 4.2,
+   "near_site": "",
+   "near_mask_km": 12.0,
+   "class": "nosherd:water",
+   "nosherd": "water"
+  },
+  {
+   "lon": 35.3892,
+   "lat": 31.1976,
+   "score": 7.062,
+   "near_site_km": 2.5,
+   "near_site": "",
+   "near_mask_km": 11.9,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.3429,
+   "lat": 31.1938,
+   "score": 6.968,
+   "near_site_km": 1.7,
+   "near_site": "Mezad Bokek",
+   "near_mask_km": 7.8,
+   "class": "NOVEL candidate"
+  },
+  {
+   "lon": 35.3749,
+   "lat": 31.1924,
+   "score": 6.952,
+   "near_site_km": 1.4,
+   "near_site": "",
+   "near_mask_km": 10.4,
+   "class": "nosherd:water",
+   "nosherd": "water"
+  },
+  {
+   "lon": 35.3636,
+   "lat": 31.2435,
+   "score": 6.907,
+   "near_site_km": 4.7,
+   "near_site": "Mezad Bokek",
+   "near_mask_km": 8.2,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.3796,
+   "lat": 31.2013,
+   "score": 6.901,
+   "near_site_km": 1.6,
+   "near_site": "",
+   "near_mask_km": 11.3,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.3846,
+   "lat": 31.1766,
+   "score": 6.843,
+   "near_site_km": 3.3,
+   "near_site": "",
+   "near_mask_km": 10.7,
+   "class": "nosherd:water",
+   "nosherd": "water"
+  },
+  {
+   "lon": 35.4222,
+   "lat": 31.2579,
+   "score": 6.827,
+   "near_site_km": 8.3,
+   "near_site": "Camp B'",
+   "near_mask_km": 9.2,
+   "class": "nosherd:salt_pond",
+   "nosherd": "salt_pond_margin"
+  },
+  {
+   "lon": 35.4092,
+   "lat": 31.2153,
+   "score": 6.692,
+   "near_site_km": 4.7,
+   "near_site": "",
+   "near_mask_km": 12.4,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.4043,
+   "lat": 31.2214,
+   "score": 6.64,
+   "near_site_km": 4.6,
+   "near_site": "",
+   "near_mask_km": 11.6,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.3796,
+   "lat": 31.1767,
+   "score": 6.547,
+   "near_site_km": 3.0,
+   "near_site": "",
+   "near_mask_km": 10.3,
+   "class": "nosherd:water",
+   "nosherd": "water"
+  },
+  {
+   "lon": 35.4219,
+   "lat": 31.2554,
+   "score": 6.499,
+   "near_site_km": 8.4,
+   "near_site": "",
+   "near_mask_km": 9.4,
+   "class": "nosherd:salt_pond",
+   "nosherd": "salt_pond_margin"
+  },
+  {
+   "lon": 35.3935,
+   "lat": 31.168,
+   "score": 6.429,
+   "near_site_km": 4.0,
+   "near_site": "\u05de\u05e6\u05d3 \u05d6\u05d4\u05e8 \u05d4\u05de\u05d6\u05e8\u05d7\u05d9",
+   "near_mask_km": 11.4,
+   "class": "nosherd:water",
+   "nosherd": "water"
+  },
+  {
+   "lon": 35.366,
+   "lat": 31.1634,
+   "score": 6.336,
+   "near_site_km": 1.7,
+   "near_site": "\u05de\u05e6\u05d3 \u05d6\u05d4\u05e8 \u05d4\u05de\u05d6\u05e8\u05d7\u05d9",
+   "near_mask_km": 8.7,
+   "class": "nosherd:salt_pond",
+   "nosherd": "salt_pond_margin"
+  },
+  {
+   "lon": 35.3821,
+   "lat": 31.1769,
+   "score": 6.335,
+   "near_site_km": 3.1,
+   "near_site": "",
+   "near_mask_km": 10.5,
+   "class": "nosherd:water",
+   "nosherd": "water"
+  },
+  {
+   "lon": 35.3426,
+   "lat": 31.1939,
+   "score": 6.15,
+   "near_site_km": 1.7,
+   "near_site": "Mezad Bokek",
+   "near_mask_km": 7.8,
+   "class": "NOVEL candidate"
+  },
+  {
+   "lon": 35.3815,
+   "lat": 31.1764,
+   "score": 6.14,
+   "near_site_km": 3.1,
+   "near_site": "",
+   "near_mask_km": 10.4,
+   "class": "nosherd:water",
+   "nosherd": "water"
+  },
+  {
+   "lon": 35.4203,
+   "lat": 31.2549,
+   "score": 6.14,
+   "near_site_km": 8.2,
+   "near_site": "",
+   "near_mask_km": 9.3,
+   "class": "nosherd:salt_pond",
+   "nosherd": "salt_pond_margin"
+  },
+  {
+   "lon": 35.3661,
+   "lat": 31.1769,
+   "score": 6.07,
+   "near_site_km": 2.5,
+   "near_site": "",
+   "near_mask_km": 9.0,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.4087,
+   "lat": 31.2221,
+   "score": 5.958,
+   "near_site_km": 5.0,
+   "near_site": "",
+   "near_mask_km": 11.7,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.3749,
+   "lat": 31.203,
+   "score": 5.951,
+   "near_site_km": 1.2,
+   "near_site": "",
+   "near_mask_km": 11.0,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.3782,
+   "lat": 31.1856,
+   "score": 5.938,
+   "near_site_km": 2.1,
+   "near_site": "",
+   "near_mask_km": 10.4,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  },
+  {
+   "lon": 35.418,
+   "lat": 31.2512,
+   "score": 5.909,
+   "near_site_km": 7.8,
+   "near_site": "",
+   "near_mask_km": 9.5,
+   "class": "nosherd:salt_pond",
+   "nosherd": "salt_pond_margin"
+  },
+  {
+   "lon": 35.3793,
+   "lat": 31.1924,
+   "score": 5.9,
+   "near_site_km": 1.8,
+   "near_site": "",
+   "near_mask_km": 10.8,
+   "class": "nosherd:water",
+   "nosherd": "water"
+  },
+  {
+   "lon": 35.383,
+   "lat": 31.1999,
+   "score": 5.879,
+   "near_site_km": 1.9,
+   "near_site": "",
+   "near_mask_km": 11.5,
+   "class": "nosherd:water",
+   "nosherd": "water_margin"
+  }
+ ],
+ "wavelength_check_nm": [
+  1376.0,
+  1423.0
+ ],
+ "run": "2026-06-17 06:55"
+}
